@@ -1,5 +1,4 @@
-﻿using CloudPhoto.Extensions;
-using CloudPhoto.Helpers;
+﻿using CloudPhoto.Helpers;
 using CloudPhoto.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

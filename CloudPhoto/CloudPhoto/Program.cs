@@ -14,9 +14,10 @@ builder.ConfigureServices(Startup.ConfigureServices);
 var app = builder.Build();
 
 app.AddCommands<InitCommand>();
-app.AddCommands<UploadCommand>();
-app.AddCommands<DownloadCommand>();
-app.AddCommands<ListCommand>();
 app.AddCommands<DeleteCommand>();
+app.AddCommands<DownloadCommand>();
+app.AddCommands<UploadCommand>();
+app.AddCommands<ListCommand>();
+app.AddCommands<MkSiteCommand>();
 
 app.Run();

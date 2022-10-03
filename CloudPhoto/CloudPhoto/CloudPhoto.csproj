@@ -13,6 +13,7 @@
       <PackageReference Include="ConsoleAppFramework" Version="4.2.3" />
       <PackageReference Include="ini" Version="1.0.7" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="RazorEngine" Version="3.10.0" />
     </ItemGroup>
     
     <ItemGroup>

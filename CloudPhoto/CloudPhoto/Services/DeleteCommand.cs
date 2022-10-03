@@ -1,6 +1,5 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
-using CloudPhoto.Extensions;
 using CloudPhoto.Helpers;
 using CloudPhoto.Settings;
 
