@@ -32,6 +32,7 @@ namespace CloudPhoto.Services
         {
             var objects = list.S3Objects
                 .Select(x => func(x.Key))
+                .Where(x => !string.IsNullOrEmpty(x))
                 .Distinct();
 
             foreach (var obj in objects)

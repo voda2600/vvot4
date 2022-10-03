@@ -1,20 +1,28 @@
-﻿using RazorEngine;
+﻿using RazorEngineCore;
 
 namespace CloudPhoto.Helpers;
 
 public static class RenderViewHelper
 {
-    public static string RenderPartialToString(string viewPath, object model)
+    public static async Task<string> GetHtmlFromRazor(string viewPath, object? model = null)
     {
-        string viewAbsolutePath = MapPath(viewPath);
-        var viewSource = File.ReadAllText(viewAbsolutePath);
-        string renderedText = Razor.Parse(viewSource, model);
-        return renderedText;
+        using (StreamReader reader = new StreamReader(viewPath))
+        {
+            var text = await reader.ReadToEndAsync();
+            var razorEngine = new RazorEngine();
+            var template = await razorEngine.CompileAsync(text);
+            var result = await template.RunAsync(model);
+            return result;
+        }
     }
-
-    public static string MapPath(string filePath)
+    
+    public static Stream GenerateStreamFromString(string s)
     {
-        return string.Format("{0}{1}", Environment.CurrentDirectory+'/',
-            filePath.Replace("~", string.Empty).TrimStart('/'));
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.Write(s);
+        writer.Flush();
+        stream.Position = 0;
+        return stream;
     }
 }
