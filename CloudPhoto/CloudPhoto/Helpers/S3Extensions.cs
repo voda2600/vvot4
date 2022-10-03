@@ -1,7 +1,7 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 
-namespace CloudPhoto.Extensions
+namespace CloudPhoto.Helpers
 {
     public static class S3Extensions
     {

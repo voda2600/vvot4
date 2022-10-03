@@ -1,21 +1,22 @@
 ﻿using CloudPhoto;
-using CloudPhoto.Handlers;
+using CloudPhoto.Services;
 
-if (args.Length == 1 && args[0] == Constants.InitCommand)
+if (args[0] == "init")
 {
-    var initHandler = new InitHandler();
+    var initHandler = new InitCommand();
     await initHandler.Handle();
     return;
 }
 
-var builder = ConsoleApp.CreateBuilder(args, options => { options.ApplicationName = "cloudphoto"; });
+var applicationName = "cloudphoto";
+var builder = ConsoleApp.CreateBuilder(args, options => { options.ApplicationName = applicationName; });
 builder.ConfigureServices(Startup.ConfigureServices);
 var app = builder.Build();
 
-app.AddCommands<InitHandler>();
-app.AddCommands<UploadHandler>();
-app.AddCommands<DownloadHandler>();
-app.AddCommands<ListHandler>();
-app.AddCommands<DeleteHandler>();
+app.AddCommands<InitCommand>();
+app.AddCommands<UploadCommand>();
+app.AddCommands<DownloadCommand>();
+app.AddCommands<ListCommand>();
+app.AddCommands<DeleteCommand>();
 
 app.Run();

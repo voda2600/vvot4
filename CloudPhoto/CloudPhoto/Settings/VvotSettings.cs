@@ -2,7 +2,7 @@
 
 namespace CloudPhoto.Settings
 {
-    public class CloudSettings
+    public class VvotSettings
     {
         public string BaseUrl { get; set; } = null!;
 
@@ -12,7 +12,7 @@ namespace CloudPhoto.Settings
 
         public string Bucket { get; set; } = null!;
 
-        public static CloudSettings FromIni(string path)
+        public static VvotSettings FromIni(string path)
         {
             var ini = new IniFile(path);
             var hasSection = ini.TryGetSection("DEFAULT", out var config);
@@ -22,7 +22,7 @@ namespace CloudPhoto.Settings
                 throw new ApplicationException("Ini file is invalid");
             }
 
-            var settings = new CloudSettings
+            var settings = new VvotSettings
             {
                 BaseUrl = config["endpoint_url"],
                 Bucket = config["bucket"],

@@ -3,16 +3,16 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using CloudPhoto.Settings;
 
-namespace CloudPhoto.Handlers
+namespace CloudPhoto.Services
 {
-    public class DownloadHandler : ConsoleAppBase
+    public class DownloadCommand : ConsoleAppBase
     {
-        private readonly CloudSettings _cloudSettings;
+        private readonly VvotSettings _vvotSettings;
         private readonly IAmazonS3 _amazonS3;
 
-        public DownloadHandler(CloudSettings cloudSettings, IAmazonS3 amazonS3)
+        public DownloadCommand(VvotSettings vvotSettings, IAmazonS3 amazonS3)
         {
-            _cloudSettings = cloudSettings;
+            _vvotSettings = vvotSettings;
             _amazonS3 = amazonS3;
         }
 
@@ -23,7 +23,7 @@ namespace CloudPhoto.Handlers
             var prefix = album + "/";
             var objects = await _amazonS3.ListObjectsV2Async(new ListObjectsV2Request()
             {
-                BucketName = _cloudSettings.Bucket,
+                BucketName = _vvotSettings.Bucket,
                 Prefix = prefix,
             });
 
@@ -37,7 +37,7 @@ namespace CloudPhoto.Handlers
             foreach (var obj in objects.S3Objects)
             {
                 var fileName = obj.Key.Replace(prefix, "");
-                await utility.DownloadAsync(Path.Combine(path, fileName), _cloudSettings.Bucket, obj.Key);
+                await utility.DownloadAsync(Path.Combine(path, fileName), _vvotSettings.Bucket, obj.Key);
             }
         }
     }

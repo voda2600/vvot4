@@ -2,18 +2,18 @@
 using Amazon.S3.Model;
 using CloudPhoto.Settings;
 
-namespace CloudPhoto.Handlers
+namespace CloudPhoto.Services
 {
-    public class UploadHandler : ConsoleAppBase
+    public class UploadCommand : ConsoleAppBase
     {
         private readonly IAmazonS3 _amazonS3;
-        private readonly CloudSettings _cloudSettings;
+        private readonly VvotSettings _vvotSettings;
         private readonly AppSettings _appSettings;
 
-        public UploadHandler(IAmazonS3 amazonS3, CloudSettings cloudSettings, AppSettings appSettings)
+        public UploadCommand(IAmazonS3 amazonS3, VvotSettings vvotSettings, AppSettings appSettings)
         {
             _amazonS3 = amazonS3;
-            _cloudSettings = cloudSettings;
+            _vvotSettings = vvotSettings;
             _appSettings = appSettings;
         }
 
@@ -34,7 +34,7 @@ namespace CloudPhoto.Handlers
                 {
                     await _amazonS3.PutObjectAsync(new PutObjectRequest()
                     {
-                        BucketName = _cloudSettings.Bucket,
+                        BucketName = _vvotSettings.Bucket,
                         FilePath = file,
                         Key = $"{album}/{Path.GetFileName(file)}",
                     });

@@ -1,18 +1,19 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using CloudPhoto.Extensions;
+using CloudPhoto.Helpers;
 using CloudPhoto.Settings;
 
-namespace CloudPhoto.Handlers
+namespace CloudPhoto.Services
 {
-    public class DeleteHandler : ConsoleAppBase
+    public class DeleteCommand : ConsoleAppBase
     {
         private readonly IAmazonS3 _amazonS3;
-        private readonly CloudSettings _cloudSettings;
+        private readonly VvotSettings _vvotSettings;
 
-        public DeleteHandler(CloudSettings cloudSettings, IAmazonS3 amazonS3)
+        public DeleteCommand(VvotSettings vvotSettings, IAmazonS3 amazonS3)
         {
-            _cloudSettings = cloudSettings;
+            _vvotSettings = vvotSettings;
             _amazonS3 = amazonS3;
         }
 
@@ -27,14 +28,14 @@ namespace CloudPhoto.Handlers
 
         private async Task DeletePhoto(string album, string photo)
         {
-            var objectKey = $"{album}/{photo}";
-            var doesObjectExists = await _amazonS3.Exists(_cloudSettings.Bucket, objectKey);
+            var key = $"{album}/{photo}";
+            var doesObjectExists = await _amazonS3.Exists(_vvotSettings.Bucket, key);
             if (!doesObjectExists) throw new ApplicationException("No object!");
 
             await _amazonS3.DeleteObjectAsync(new DeleteObjectRequest
             {
-                BucketName = _cloudSettings.Bucket,
-                Key = objectKey
+                BucketName = _vvotSettings.Bucket,
+                Key = key
             });
         }
 
@@ -42,7 +43,7 @@ namespace CloudPhoto.Handlers
         {
             var list = await _amazonS3.ListObjectsV2Async(new ListObjectsV2Request
             {
-                BucketName = _cloudSettings.Bucket,
+                BucketName = _vvotSettings.Bucket,
                 Prefix = album
             });
 
@@ -52,7 +53,7 @@ namespace CloudPhoto.Handlers
 
             await _amazonS3.DeleteObjectsAsync(new DeleteObjectsRequest
             {
-                BucketName = _cloudSettings.Bucket,
+                BucketName = _vvotSettings.Bucket,
                 Objects = objects
             });
         }

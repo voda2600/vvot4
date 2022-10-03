@@ -2,21 +2,26 @@
 using CloudPhoto.Helpers;
 using CloudPhoto.Settings;
 
-namespace CloudPhoto.Handlers
+namespace CloudPhoto.Services
 {
-    public class InitHandler : ConsoleAppBase
+
+    public class InitCommand : ConsoleAppBase
     {
+        private static readonly string InitPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            ".config", "cloudphoto", "cloudphotorc");
+        
         [Command("init")]
         public async Task Handle()
         {
             var cloudSettings = GetCloudSettings();
             SaveCloudSettings(cloudSettings);
-            await CreateBucketIfDoesNotExist(cloudSettings);
+            await CreateBucket(cloudSettings);
         }
 
-        private CloudSettings GetCloudSettings()
+        private VvotSettings GetCloudSettings()
         {
-            var cloudSettings = new CloudSettings
+            var cloudSettings = new VvotSettings
             {
                 BaseUrl = @"https://storage.yandexcloud.net"
             };
@@ -35,16 +40,16 @@ namespace CloudPhoto.Handlers
             return cloudSettings;
         }
 
-        private void SaveCloudSettings(CloudSettings cloudSettings)
+        private void SaveCloudSettings(VvotSettings vvotSettings)
         {
-            EnsureDirectoryExists(Constants.ConfigPath);
-            using var streamWriter = new StreamWriter(Constants.ConfigPath);
+            EnsureDirectoryExists(InitPath);
+            using var streamWriter = new StreamWriter(InitPath);
             streamWriter.WriteLine("[DEFAULT]");
-            streamWriter.WriteLine($"bucket = {cloudSettings.Bucket}");
-            streamWriter.WriteLine($"aws_access_key_id = {cloudSettings.AwsAccessKeyId}");
-            streamWriter.WriteLine($"aws_secret_access_key = {cloudSettings.AwsSecretAccessKey}");
+            streamWriter.WriteLine($"bucket = {vvotSettings.Bucket}");
+            streamWriter.WriteLine($"aws_access_key_id = {vvotSettings.AwsAccessKeyId}");
+            streamWriter.WriteLine($"aws_secret_access_key = {vvotSettings.AwsSecretAccessKey}");
             streamWriter.WriteLine("region = ru-central1");
-            streamWriter.WriteLine($"endpoint_url = {cloudSettings.BaseUrl}");
+            streamWriter.WriteLine($"endpoint_url = {vvotSettings.BaseUrl}");
         }
 
         private static void EnsureDirectoryExists(string filePath)
@@ -53,10 +58,10 @@ namespace CloudPhoto.Handlers
             if (!fi.Directory!.Exists) Directory.CreateDirectory(fi.DirectoryName!);
         }
 
-        private async Task CreateBucketIfDoesNotExist(CloudSettings cloudSettings)
+        private async Task CreateBucket(VvotSettings vvotSettings)
         {
-            using var client = AwsHelper.CreateClient(cloudSettings);
-            var bucket = cloudSettings.Bucket;
+            using var client = AwsHelper.CreateClient(vvotSettings);
+            var bucket = vvotSettings.Bucket;
             var doesBucketExist = await client.DoesS3BucketExistAsync(bucket);
             if (!doesBucketExist)
             {

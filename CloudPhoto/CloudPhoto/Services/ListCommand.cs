@@ -2,16 +2,16 @@
 using Amazon.S3.Model;
 using CloudPhoto.Settings;
 
-namespace CloudPhoto.Handlers
+namespace CloudPhoto.Services
 {
-    public class ListHandler : ConsoleAppBase
+    public class ListCommand : ConsoleAppBase
     {
-        private readonly CloudSettings _cloudSettings;
+        private readonly VvotSettings _vvotSettings;
         private readonly IAmazonS3 _amazonS3;
 
-        public ListHandler(CloudSettings cloudSettings, IAmazonS3 amazonS3)
+        public ListCommand(VvotSettings vvotSettings, IAmazonS3 amazonS3)
         {
-            _cloudSettings = cloudSettings;
+            _vvotSettings = vvotSettings;
             _amazonS3 = amazonS3;
         }
 
@@ -20,7 +20,7 @@ namespace CloudPhoto.Handlers
         {
             var list = await _amazonS3.ListObjectsV2Async(new ListObjectsV2Request()
             {
-                BucketName = _cloudSettings.Bucket,
+                BucketName = _vvotSettings.Bucket,
                 Prefix = album,
             });
 

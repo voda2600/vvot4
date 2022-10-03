@@ -6,7 +6,7 @@ namespace CloudPhoto.Helpers
 {
     public static class AwsHelper
     {
-        public static IAmazonS3 CreateClient(CloudSettings settings)
+        public static IAmazonS3 CreateClient(VvotSettings settings)
         {
             var config = new AmazonS3Config
             {
