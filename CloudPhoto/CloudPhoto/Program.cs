@@ -1,7 +1,7 @@
 ﻿using CloudPhoto;
 using CloudPhoto.Services;
 
-if (args[0] == "init")
+if (args.Length == 1 && args[0] == "init")
 {
     var initHandler = new InitCommand();
     await initHandler.Handle();
