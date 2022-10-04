@@ -8,13 +8,16 @@ namespace CloudPhoto.Services
     {
         private readonly IAmazonS3 _amazonS3;
         private readonly VvotSettings _vvotSettings;
-        private readonly AppSettings _appSettings;
+        private readonly string[] _allowedExtensions = new[]
+        {
+            ".jpg",
+            ".jpeg"
+        };
 
-        public UploadCommand(IAmazonS3 amazonS3, VvotSettings vvotSettings, AppSettings appSettings)
+        public UploadCommand(IAmazonS3 amazonS3, VvotSettings vvotSettings)
         {
             _amazonS3 = amazonS3;
             _vvotSettings = vvotSettings;
-            _appSettings = appSettings;
         }
 
         [Command("upload")]
@@ -22,14 +25,14 @@ namespace CloudPhoto.Services
         {
             path ??= Environment.CurrentDirectory;
             var files = Directory.GetFiles(path);
-            if (!files.Any(file => _appSettings.FileExtensions.Contains(Path.GetExtension(file))))
+            if (!files.Any(file => _allowedExtensions.Contains(Path.GetExtension(file))))
             {
                 throw new ApplicationException("No photos in directory");
             }
 
             foreach (var file in files)
             {
-                if (!_appSettings.FileExtensions.Contains(Path.GetExtension(file))) continue;
+                if (!_allowedExtensions.Contains(Path.GetExtension(file))) continue;
                 try
                 {
                     await _amazonS3.PutObjectAsync(new PutObjectRequest()

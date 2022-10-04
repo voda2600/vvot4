@@ -72,7 +72,7 @@ namespace CloudPhoto.Services
                     });
                 }
 
-                var albumHtml = await RenderViewHelper.GetHtmlFromRazor("Views/Templates/AlbumModelView.cshtml", model);
+                var albumHtml = await RenderViewHelper.GetHtmlFromRazor($"{AppDomain.CurrentDomain.BaseDirectory}/Pages/AlbumModelView.cshtml", model);
                 await using (var stream = RenderViewHelper.GenerateStreamFromString(albumHtml))
                 {
                     await _amazonS3.PutObjectAsync(new PutObjectRequest()
@@ -91,7 +91,7 @@ namespace CloudPhoto.Services
                 i++;
             }
 
-            var indexHtml = await RenderViewHelper.GetHtmlFromRazor("Views/Templates/Index.cshtml", albumHtmlList);
+            var indexHtml = await RenderViewHelper.GetHtmlFromRazor($"{AppDomain.CurrentDomain.BaseDirectory}/Pages/Index.cshtml", albumHtmlList);
             await using (var stream = RenderViewHelper.GenerateStreamFromString(indexHtml))
             {
                 await _amazonS3.PutObjectAsync(new PutObjectRequest()
@@ -102,7 +102,7 @@ namespace CloudPhoto.Services
                 });
             }
 
-            var errorHtml = await RenderViewHelper.GetHtmlFromRazor("Views/Templates/Error.cshtml");
+            var errorHtml = await RenderViewHelper.GetHtmlFromRazor($"{AppDomain.CurrentDomain.BaseDirectory}/Pages/Error.cshtml");
             await using (var stream = RenderViewHelper.GenerateStreamFromString(errorHtml))
             {
                 await _amazonS3.PutObjectAsync(new PutObjectRequest()
